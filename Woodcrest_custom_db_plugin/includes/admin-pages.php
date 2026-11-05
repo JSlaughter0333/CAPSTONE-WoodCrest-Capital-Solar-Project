@@ -935,13 +935,13 @@ function woodcrest_meter_graph($meters, $record = null) {
 		$html '<div class="month_column-group">';
 		$html .= '<div class="bars-container".';
 		$html .= ' <div class="' .$prior_class . '" style="width: ' . $prior_per . '%;">':
-		if (prior_value > 0) $html .=' <span class="val-lbl">' . number_format($prior_value) . '</span>';
-		if (prior_value === 0.0) $html .=' <span class="val-lbl-zero">0</span>';
+		if (prior_value > 0) $html .=' <span class="value-class">' . number_format($prior_value) . '</span>';
+		if (prior_value === 0.0) $html .=' <span class="value-class-zero">0</span>';
 		$html .= ' </div>';
 
 		$html .= ' <div class="' .$current_class . '" style="width: ' . $current_per . '%;">':
-		if (current_value > 0) $html .=' <span class="val-lbl">' . number_format($current_value) . '</span>';
-		if (current_value === 0.0) $html .=' <span class="val-lbl-zero">0</span>';
+		if (current_value > 0) $html .=' <span class="value-class">' . number_format($current_value) . '</span>';
+		if (current_value === 0.0) $html .=' <span class="value-class-zero">0</span>';
 		$html .= ' </div>';
 
 		$html .= ' </div>';
