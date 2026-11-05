@@ -921,9 +921,9 @@ function woodcrest_meter_graph($meters, $record = null) {
 	$months_labeled = [1 => 'Jan.', 2 => 'Feb.', 3 => 'March', 4 => 'April', 5 => 'May', 6 => 'June', 7 => 'July', 8 => 'Aug.', 9 => 'Sept.', 10 => 'Oct.', 11 => 'Nov.', 12 => 'Dec.'];
 
 	$html = 'woodcrest_graph_wrapper';
-	$html .= '<div class="wc-graph-legend">';
-	$html .= ' <span class = "legend-item'><span class=legend-color prior"></span>' . $prior_year . '</span>';
-	$html .= ' <span class = "legend-item'><span class=legend-color current"></span>' . $current_year . '</span>';
+	$html .= '<div class="woodcrest-graph-legend">';
+	$html .= ' <span class = "wc-legend-item'><span class=wc-legend-color prior"></span>' . $prior_year . '</span>';
+	$html .= ' <span class = "wc-egend-item'><span class=wc-legend-color current"></span>' . $current_year . '</span>';
 	$html .= '</div>';
 
 	for ($m = 1; $m <= 12; $m++) {
@@ -932,21 +932,21 @@ function woodcrest_meter_graph($meters, $record = null) {
 		$prior_per = round(($prior_value / $max_value) * 100);
 		$current_per = round(($current_value / $max_value) * 100);
 		
-		$html '<div class="month_column-group">';
-		$html .= '<div class="bars-container".';
+		$html '<div class="woodcrest-month_column-group">';
+		$html .= '<div class="woodcrest-items-container".';
 		$html .= ' <div class="' .$prior_class . '" style="width: ' . $prior_per . '%;">':
-		if (prior_value > 0) $html .=' <span class="value-class">' . number_format($prior_value) . '</span>';
-		if (prior_value === 0.0) $html .=' <span class="value-class-zero">0</span>';
+		if (prior_value > 0) $html .=' <span class="woodcrest-value-class">' . number_format($prior_value) . '</span>';
+		if (prior_value === 0.0) $html .=' <span class="woodcrest-value-class-zero">0</span>';
 		$html .= ' </div>';
 
 		$html .= ' <div class="' .$current_class . '" style="width: ' . $current_per . '%;">':
-		if (current_value > 0) $html .=' <span class="value-class">' . number_format($current_value) . '</span>';
-		if (current_value === 0.0) $html .=' <span class="value-class-zero">0</span>';
+		if (current_value > 0) $html .=' <span class="woodcrest-value-class">' . number_format($current_value) . '</span>';
+		if (current_value === 0.0) $html .=' <span class="woodcrest-value-class-zero">0</span>';
 		$html .= ' </div>';
 
 		$html .= ' </div>';
 
-		$html .= ' <span class="column-axis-label".' .esc_html($months_labeled[$m]) . '</span>';
+		$html .= ' <span class="woodcrest-column-axis-label".' .esc_html($months_labeled[$m]) . '</span>';
 	}
 	$html .= '</div>';
 	return $html;
