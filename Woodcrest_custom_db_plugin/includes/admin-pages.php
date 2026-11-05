@@ -894,14 +894,16 @@ function woodcrest_power_payment_form_html($invoices, $users, $record = null) {
 #test function for graph display, please test, verify, and critique
 function woodcrest_meter_graph($meters, $record = null) {
 	global $woodcrest_db;
-	$meter_options = []; foreach ($meters as $meter) { $meter_options[$meter->meter_id] = $meter->meter_number; }
+	woodcrest_power_render_graph(['Meter', 'Reading date', 'Usage', 'Unit', 'Actions'], array_map(function ($row) {
+        return [$row->meter_number, $row->reading_date, $row->usage_amount, $row->usage_unit];
+    }, $latest_readings), true);
 	$current_year = (int)date('Y');
 	$prior_year = current_year - 1;
 
 	$current_year_data = array_fill(1, 12, 0.0);
 	$prior_year_data = array_fill(1, 12, 0.0);
 
-	$readings = woodcrest_get_meter_readings(meter_id, 48);
+	$readings = woodcrest_get_meter_readings($meter_id, 48);
 	if(!empty($readings)) {
 		foreach ($readings as $row) {
 			$row_year = (int)date('Y', strtotime($row->reading_date));
@@ -934,14 +936,14 @@ function woodcrest_meter_graph($meters, $record = null) {
 		
 		$html '<div class="woodcrest-month_column-group">';
 		$html .= '<div class="woodcrest-items-container".';
-		$html .= ' <div class="' .$prior_class . '" style="width: ' . $prior_per . '%;">':
-		if (prior_value > 0) $html .=' <span class="woodcrest-value-class">' . number_format($prior_value) . '</span>';
-		if (prior_value === 0.0) $html .=' <span class="woodcrest-value-class-zero">0</span>';
+		$html .= ' <div class="' .$prior_class . '" style="height: ' . $prior_per . '%;">':
+		if ($prior_value > 0) $html .=' <span class="woodcrest-value-class">' . number_format($prior_value) . '</span>';
+		if ($prior_value === 0.0) $html .=' <span class="woodcrest-value-class-zero">0</span>';
 		$html .= ' </div>';
 
-		$html .= ' <div class="' .$current_class . '" style="width: ' . $current_per . '%;">':
-		if (current_value > 0) $html .=' <span class="woodcrest-value-class">' . number_format($current_value) . '</span>';
-		if (current_value === 0.0) $html .=' <span class="woodcrest-value-class-zero">0</span>';
+		$html .= ' <div class="' .$current_class . '" style="height: ' . $current_per . '%;">':
+		if ($current_value > 0) $html .=' <span class="woodcrest-value-class">' . number_format($current_value) . '</span>';
+		if ($current_value === 0.0) $html .=' <span class="woodcrest-value-class-zero">0</span>';
 		$html .= ' </div>';
 
 		$html .= ' </div>';
