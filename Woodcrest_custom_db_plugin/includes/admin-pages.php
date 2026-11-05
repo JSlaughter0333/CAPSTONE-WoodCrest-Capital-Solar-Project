@@ -889,3 +889,65 @@ function woodcrest_power_payment_form_html($invoices, $users, $record = null) {
     $html .= woodcrest_power_submit('save_payment', $record ? 'Update payment' : 'Add payment');
     return $html;
 }
+
+
+#test function for graph display, please test, verify, and critique
+function woodcrest_meter_graph($meters, $record = null) {
+	global $woodcrest_db;
+	$meter_options = []; foreach ($meters as $meter) { $meter_options[$meter->meter_id] = $meter->meter_number; }
+	$current_year = (int)date('Y');
+	$prior_year = current_year - 1;
+
+	$current_year_data = array_fill(1, 12, 0.0);
+	$prior_year_data = array_fill(1, 12, 0.0);
+
+	$readings = woodcrest_get_meter_readings(meter_id, 48);
+	if(!empty($readings)) {
+		foreach ($readings as $row) {
+			$row_year = (int)date('Y', strtotime($row->reading_date));
+			$row_month = (int)date('m', strtotime($row->reading_date));
+
+			if ($row_year === $prior_year) {
+				$prior_year_data[$row_month] += (float)$row->usage;
+			} elseif ($row_year === $current_year) {
+				$current_year_data[$row_month] += (float)$row->usage;
+			}
+		}
+	}
+
+	$max_value = max(max($prior_year_data), max($current_year_data), 1);
+	$max_value *= 1.10;
+
+	$months_labeled = [1 => 'Jan.', 2 => 'Feb.', 3 => 'March', 4 => 'April', 5 => 'May', 6 => 'June', 7 => 'July', 8 => 'Aug.', 9 => 'Sept.', 10 => 'Oct.', 11 => 'Nov.', 12 => 'Dec.'];
+
+	$html = 'woodcrest_graph_wrapper';
+	$html .= '<div class="wc-graph-legend">';
+	$html .= ' <span class = "legend-item'><span class=legend-color prior"></span>' . $prior_year . '</span>';
+	$html .= ' <span class = "legend-item'><span class=legend-color current"></span>' . $current_year . '</span>';
+	$html .= '</div>';
+
+	for ($m = 1; $m <= 12; $m++) {
+		$prior_value = $prior_year_data[$m];
+		$current_value = $current_year_data[$m];
+		$prior_per = round(($prior_value / $max_value) * 100);
+		$current_per = round(($current_value / $max_value) * 100);
+		
+		$html '<div class="month_column-group">';
+		$html .= '<div class="bars-container".';
+		$html .= ' <div class="' .$prior_class . '" style="width: ' . $prior_per . '%;">':
+		if (prior_value > 0) $html .=' <span class="val-lbl">' . number_format($prior_value) . '</span>';
+		if (prior_value === 0.0) $html .=' <span class="val-lbl-zero">0</span>';
+		$html .= ' </div>';
+
+		$html .= ' <div class="' .$current_class . '" style="width: ' . $current_per . '%;">':
+		if (current_value > 0) $html .=' <span class="val-lbl">' . number_format($current_value) . '</span>';
+		if (current_value === 0.0) $html .=' <span class="val-lbl-zero">0</span>';
+		$html .= ' </div>';
+
+		$html .= ' </div>';
+
+		$html .= ' <span class="column-axis-label".' .esc_html($months_labeled[$m]) . '</span>';
+	}
+	$html .= '</div>';
+	return $html;
+}
